@@ -83,12 +83,18 @@ class AdaptAssignStatusToProductPlugin
             return;
         }
 
+        if (isset($this->productStatus[$product->getSku()])) {
+            $proceed($product, $this->productStatus[$product->getSku()]);
+            return;
+        }
+
         try {
             $this->getProductIdsBySkus->execute([$product->getSku()]);
 
             if (null === $status) {
                 $stockId = $this->getStockIdForCurrentWebsite->execute();
                 $status = (int)$this->isProductSalable->execute($product->getSku(), $stockId);
+                $this->productStatus[$product->getSku()] = $status;
             }
 
             $proceed($product, $status);
@@ -96,30 +102,4 @@ class AdaptAssignStatusToProductPlugin
             return;
         }
     }
-
-//    public function beforeAssignStatusToProduct(
-//        Stock $subject,
-//        Product $product,
-//        $status = null
-//    ): array {
-//        if (null === $product->getSku()) {
-//            return [$product, $status];
-//        }
-//        $sku = $product->getSku();
-//        if (isset($this->productStatus[$sku])) {
-//        //    return [$product, $this->productStatus[$sku]];
-//        }
-//
-//        try {
-//            $this->getProductIdsBySkus->execute([$sku]);
-//            if (null === $status) {
-//                $stockId = $this->getStockIdForCurrentWebsite->execute();
-//                $status = (int)$this->isProductSalable->execute($sku, $stockId);
-//                $this->productStatus[$sku] = $status;
-//            }
-//        } catch (NoSuchEntityException $e) {
-//        }
-//
-//        return [$product, $status];
-//    }
 }
