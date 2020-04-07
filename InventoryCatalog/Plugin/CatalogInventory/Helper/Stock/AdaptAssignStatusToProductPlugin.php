@@ -9,6 +9,7 @@ namespace Magento\InventoryCatalog\Plugin\CatalogInventory\Helper\Stock;
 
 use Magento\Catalog\Model\Product;
 use Magento\CatalogInventory\Helper\Stock;
+use Magento\ConfigurableProduct\Model\Product\Type\Configurable;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\InventoryCatalog\Model\GetStockIdForCurrentWebsite;
 use Magento\InventoryCatalogApi\Api\DefaultStockProviderInterface;
@@ -39,6 +40,11 @@ class AdaptAssignStatusToProductPlugin
      * @var GetProductIdsBySkusInterface
      */
     private $getProductIdsBySkus;
+
+    /**
+     * @var array
+     */
+    private $productStatus;
 
     /**
      * @param GetStockIdForCurrentWebsite $getStockIdForCurrentWebsite
@@ -90,4 +96,30 @@ class AdaptAssignStatusToProductPlugin
             return;
         }
     }
+
+//    public function beforeAssignStatusToProduct(
+//        Stock $subject,
+//        Product $product,
+//        $status = null
+//    ): array {
+//        if (null === $product->getSku()) {
+//            return [$product, $status];
+//        }
+//        $sku = $product->getSku();
+//        if (isset($this->productStatus[$sku])) {
+//        //    return [$product, $this->productStatus[$sku]];
+//        }
+//
+//        try {
+//            $this->getProductIdsBySkus->execute([$sku]);
+//            if (null === $status) {
+//                $stockId = $this->getStockIdForCurrentWebsite->execute();
+//                $status = (int)$this->isProductSalable->execute($sku, $stockId);
+//                $this->productStatus[$sku] = $status;
+//            }
+//        } catch (NoSuchEntityException $e) {
+//        }
+//
+//        return [$product, $status];
+//    }
 }
