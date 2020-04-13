@@ -10,7 +10,7 @@ namespace Magento\InventoryConfigurableProduct\Plugin\Model\Product\Type\Configu
 use Magento\CatalogInventory\Api\StockConfigurationInterface;
 use Magento\ConfigurableProduct\Model\Product\Type\Configurable;
 use Magento\InventorySalesApi\Api\Data\SalesChannelInterface;
-use Magento\InventorySalesApi\Api\IsProductSalableInterface;
+use Magento\InventorySalesApi\Api\AreProductsSalableInterface;
 use Magento\InventorySalesApi\Api\StockResolverInterface;
 use Magento\Store\Model\StoreManagerInterface;
 
@@ -20,7 +20,7 @@ use Magento\Store\Model\StoreManagerInterface;
 class IsSalableOptionPlugin
 {
     /**
-     * @var IsProductSalableInterface
+     * @var AreProductsSalableInterface
      */
     private $isProductSalable;
 
@@ -40,13 +40,13 @@ class IsSalableOptionPlugin
     private $stockConfiguration;
 
     /**
-     * @param IsProductSalableInterface $isProductSalable
+     * @param AreProductsSalableInterface $isProductSalable
      * @param StoreManagerInterface $storeManager
      * @param StockResolverInterface $stockResolver
      * @param StockConfigurationInterface $stockConfiguration
      */
     public function __construct(
-        IsProductSalableInterface $isProductSalable,
+        AreProductsSalableInterface $isProductSalable,
         StoreManagerInterface $storeManager,
         StockResolverInterface $stockResolver,
         StockConfigurationInterface $stockConfiguration
@@ -67,11 +67,16 @@ class IsSalableOptionPlugin
      */
     public function afterGetUsedProducts(Configurable $subject, array $products): array
     {
+        // TODO: fix for collection of conf products, NOT ONE BY ONE as is now!!!!
         $website = $this->storeManager->getWebsite();
         $stock = $this->stockResolver->execute(SalesChannelInterface::TYPE_WEBSITE, $website->getCode());
-
+        $skus = [];
         foreach ($products as $key => $product) {
-            if (!$this->isProductSalable->execute($product->getSku(), $stock->getStockId())) {
+            $skus[] = $product->getSku();
+        }
+        $stockStatusBucket = $this->isProductSalable->execute($skus, $stock->getStockId());
+        foreach ($products as $key => $product) {
+            if (!$stockStatusBucket[$product->getSku()]->isSalable()) {
                 $product->setIsSalable(0);
                 if (!$this->stockConfiguration->isShowOutOfStock()) {
                     unset($products[$key]);
