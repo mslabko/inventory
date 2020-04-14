@@ -67,7 +67,6 @@ class IsSalableOptionPlugin
      */
     public function afterGetUsedProducts(Configurable $subject, array $products): array
     {
-        // TODO: fix for collection of conf products, NOT ONE BY ONE as is now!!!!
         $website = $this->storeManager->getWebsite();
         $stock = $this->stockResolver->execute(SalesChannelInterface::TYPE_WEBSITE, $website->getCode());
         $skus = [];

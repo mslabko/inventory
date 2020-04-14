@@ -51,7 +51,6 @@ class AreProductsSalable implements AreProductsSalableInterface
      */
     private $isProductSalableResultFactory;
 
-
     /**
      * @param SourceItemRepositoryInterface $sourceItemRepository
      * @param SearchCriteriaBuilder $searchCriteriaBuilder
@@ -82,7 +81,6 @@ class AreProductsSalable implements AreProductsSalableInterface
     public function execute(array $skus, int $stockId): array
     {
         $result = [];
-        // TODO: combine as well
         $filtered = [];
         foreach ($skus as $key => $item) {
             // TODO Must be removed once MSI-2131 is complete.
