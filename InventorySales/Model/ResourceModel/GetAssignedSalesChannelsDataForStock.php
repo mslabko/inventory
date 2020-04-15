@@ -20,6 +20,11 @@ class GetAssignedSalesChannelsDataForStock
     private $resourceConnection;
 
     /**
+     * @var array
+     */
+    private $stockCache = [];
+
+    /**
      * @param ResourceConnection $resourceConnection
      */
     public function __construct(
@@ -36,6 +41,9 @@ class GetAssignedSalesChannelsDataForStock
      */
     public function execute(int $stockId): array
     {
+        if ($this->stockCache[$stockId]) {
+            return $this->stockCache[$stockId];
+        }
         $connection = $this->resourceConnection->getConnection();
         $tableName = $this->resourceConnection->getTableName('inventory_stock_sales_channel');
 
@@ -43,6 +51,8 @@ class GetAssignedSalesChannelsDataForStock
             ->from($tableName)
             ->where('stock_id = ?', $stockId);
 
-        return $connection->fetchAll($select);
+        $stockData = $connection->fetchAll($select);
+        $this->stockCache[$stockId] = $stockData;
+        return $stockData;
     }
 }

@@ -22,6 +22,11 @@ class StockIdResolver
     private $resourceConnection;
 
     /**
+     * @var array
+     */
+    private $codesCache = [];
+
+    /**
      * @param ResourceConnection $resourceConnection
      */
     public function __construct(
@@ -39,6 +44,12 @@ class StockIdResolver
      */
     public function resolve(string $type, string $code)
     {
+        if (isset($this->codesCache[$type]) &&
+            (isset($this->codesCache[$type][$code]) || null === $this->codesCache[$type][$code])
+        ) {
+            return $this->codesCache[$type][$code];
+        }
+
         $connection = $this->resourceConnection->getConnection();
         $tableName = $this->resourceConnection->getTableName('inventory_stock_sales_channel');
 
@@ -48,6 +59,8 @@ class StockIdResolver
             ->where(SalesChannelInterface::CODE . ' = ?', $code);
 
         $stockId = $connection->fetchOne($select);
-        return false === $stockId ? null : (int)$stockId;
+        $result = false === $stockId ? null : (int)$stockId;
+        $this->codesCache[$type][$code] = $result;
+        return $result;
     }
 }
