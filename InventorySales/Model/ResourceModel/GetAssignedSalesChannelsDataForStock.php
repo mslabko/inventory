@@ -41,7 +41,7 @@ class GetAssignedSalesChannelsDataForStock
      */
     public function execute(int $stockId): array
     {
-        if ($this->stockCache[$stockId]) {
+        if (isset($this->stockCache[$stockId])) {
             return $this->stockCache[$stockId];
         }
         $connection = $this->resourceConnection->getConnection();
