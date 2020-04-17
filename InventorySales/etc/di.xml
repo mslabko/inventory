@@ -53,7 +53,7 @@
     <!-- AreProductsSalable -->
     <preference for="Magento\InventorySalesApi\Api\AreProductsSalableInterface" type="Magento\InventorySales\Model\AreProductsSalable"/>
     <!-- IsProductSalable -->
-    <preference for="Magento\InventorySalesApi\Api\IsProductSalableInterface" type="Magento\InventorySales\Model\IsProductSalableCondition\IsProductSalableConditionChain"/>
+    <preference for="Magento\InventorySalesApi\Api\IsProductSalableInterface" type="Magento\InventorySales\Model\IsProductSalableCondition\IsProductSalableConditionChainCache"/>
     <type name="Magento\InventorySales\Model\IsProductSalableCondition\IsProductSalableConditionChain">
         <arguments>
             <argument name="conditions" xsi:type="array">

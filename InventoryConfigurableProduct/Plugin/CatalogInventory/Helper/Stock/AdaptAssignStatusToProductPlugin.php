@@ -10,10 +10,10 @@ namespace Magento\InventoryConfigurableProduct\Plugin\CatalogInventory\Helper\St
 use Magento\Catalog\Model\Product;
 use Magento\CatalogInventory\Helper\Stock;
 use Magento\ConfigurableProduct\Model\Product\Type\Configurable;
-use Magento\InventorySalesApi\Api\AreProductsSalableInterface;
 use Magento\InventorySalesApi\Api\Data\SalesChannelInterface;
 use Magento\InventorySalesApi\Api\StockResolverInterface;
 use Magento\Store\Model\StoreManagerInterface;
+use Magento\InventorySalesApi\Api\IsProductSalableInterface;
 
 /**
  * Process configurable product stock status considering configurable options salable status.
@@ -26,11 +26,6 @@ class AdaptAssignStatusToProductPlugin
     private $configurable;
 
     /**
-     * @var AreProductsSalableInterface
-     */
-    private $areProductsSalable;
-
-    /**
      * @var StoreManagerInterface
      */
     private $storeManager;
@@ -41,21 +36,26 @@ class AdaptAssignStatusToProductPlugin
     private $stockResolver;
 
     /**
+     * @var IsProductSalableInterface
+     */
+    private $isProductSalable;
+
+    /**
      * @param Configurable $configurable
-     * @param AreProductsSalableInterface $areProductsSalable
      * @param StoreManagerInterface $storeManager
      * @param StockResolverInterface $stockResolver
+     * @param IsProductSalableInterface $isProductSalable
      */
     public function __construct(
         Configurable $configurable,
-        AreProductsSalableInterface $areProductsSalable,
         StoreManagerInterface $storeManager,
-        StockResolverInterface $stockResolver
+        StockResolverInterface $stockResolver,
+        IsProductSalableInterface $isProductSalable
     ) {
         $this->configurable = $configurable;
-        $this->areProductsSalable = $areProductsSalable;
         $this->storeManager = $storeManager;
         $this->stockResolver = $stockResolver;
+        $this->isProductSalable = $isProductSalable;
     }
 
     /**
@@ -83,9 +83,9 @@ class AdaptAssignStatusToProductPlugin
                 $skus[] = array_column($attribute, 'sku');
             }
             $skus = array_merge(...$skus);
-            $results = $this->areProductsSalable->execute($skus, $stock->getStockId());
-            foreach ($results as $result) {
-                if ($result->isSalable()) {
+            foreach ($skus as $sku) {
+                $isSalable = $this->isProductSalable->execute($sku, $stock->getStockId());
+                if ($isSalable) {
                     $status = 1;
                     break;
                 }
