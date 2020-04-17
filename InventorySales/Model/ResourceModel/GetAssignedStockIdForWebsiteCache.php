@@ -30,7 +30,7 @@ class GetAssignedStockIdForWebsiteCache implements GetAssignedStockIdForWebsiteI
     public function __construct(
         GetAssignedStockIdForWebsite $getAssignedStockIdForWebsite
     ) {
-        $this->$getAssignedStockIdForWebsite = $getAssignedStockIdForWebsite;
+        $this->getAssignedStockIdForWebsite = $getAssignedStockIdForWebsite;
     }
 
     /**
