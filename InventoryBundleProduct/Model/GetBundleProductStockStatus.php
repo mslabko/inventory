@@ -10,7 +10,7 @@ namespace Magento\InventoryBundleProduct\Model;
 use Magento\Bundle\Api\Data\OptionInterface;
 use Magento\Bundle\Model\OptionRepository;
 use Magento\Catalog\Api\Data\ProductInterface;
-use Magento\InventorySalesApi\Api\AreProductsSalableInterface;
+use Magento\InventorySalesApi\Api\IsProductSalableInterface;
 
 /**
  * Get bundle product stock status service.
@@ -28,23 +28,25 @@ class GetBundleProductStockStatus
     private $getProductSelection;
 
     /**
-     * @var AreProductsSalableInterface
+     * @var IsProductSalableInterface
      */
-    private $areProductsSalable;
+    private $isProductSalable;
 
     /**
+     * GetBundleProductStockStatus constructor
+     *
      * @param OptionRepository $optionRepository
      * @param GetProductSelection $getProductSelection
-     * @param AreProductsSalableInterface $areProductsSalable
+     * @param IsProductSalableInterface $isProductSalable
      */
     public function __construct(
         OptionRepository $optionRepository,
         GetProductSelection $getProductSelection,
-        AreProductsSalableInterface $areProductsSalable
+        IsProductSalableInterface $isProductSalable
     ) {
         $this->optionRepository = $optionRepository;
         $this->getProductSelection = $getProductSelection;
-        $this->areProductsSalable = $areProductsSalable;
+        $this->isProductSalable = $isProductSalable;
     }
 
     /**
@@ -62,13 +64,14 @@ class GetBundleProductStockStatus
         foreach ($bundleOptions as $option) {
             $hasSalable = false;
             $bundleSelections = $this->getProductSelection->execute($product, $option);
-            $skus = [];
+            $skus = [[]];
             foreach ($bundleSelections as $selection) {
                 $skus[] = $selection->getSku();
             }
-            $results = $this->areProductsSalable->execute($skus, $stockId);
-            foreach ($results as $result) {
-                if ($result->isSalable()) {
+            $skus = array_merge(...$skus);
+            foreach ($skus as $sku) {
+                $isSalable = $this->isProductSalable->execute($sku, $stockId);
+                if ($isSalable) {
                     $hasSalable = true;
                     break;
                 }
