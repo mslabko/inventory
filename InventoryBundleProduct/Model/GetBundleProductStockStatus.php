@@ -68,6 +68,7 @@ class GetBundleProductStockStatus
             foreach ($bundleSelections as $selection) {
                 $skus[] = $selection->getSku();
             }
+            // phpcs:disable Magento2.Performance.ForeachArrayMerge
             $skus = array_merge(...$skus);
             foreach ($skus as $sku) {
                 $isSalable = $this->isProductSalable->execute($sku, $stockId);

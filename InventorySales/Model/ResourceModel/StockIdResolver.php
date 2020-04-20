@@ -44,9 +44,7 @@ class StockIdResolver
      */
     public function resolve(string $type, string $code)
     {
-        if (isset($this->codesCache[$type]) &&
-            (isset($this->codesCache[$type][$code]) || null === $this->codesCache[$type][$code])
-        ) {
+        if (isset($this->codesCache[$type]) && array_key_exists($code, $this->codesCache[$type])) {
             return $this->codesCache[$type][$code];
         }
 
