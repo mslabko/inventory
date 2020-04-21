@@ -64,7 +64,7 @@ class GetBundleProductStockStatus
         foreach ($bundleOptions as $option) {
             $hasSalable = false;
             $bundleSelections = $this->getProductSelection->execute($product, $option);
-            $skus = [[]];
+            $skus = [];
             foreach ($bundleSelections as $selection) {
                 $skus[] = $selection->getSku();
             }
