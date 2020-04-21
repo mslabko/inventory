@@ -10,7 +10,7 @@
     <preference for="Magento\InventorySalesApi\Api\Data\SalesChannelInterface" type="Magento\InventorySales\Model\SalesChannel"/>
     <preference for="Magento\InventorySalesApi\Model\GetAssignedSalesChannelsForStockInterface" type="Magento\InventorySales\Model\GetAssignedSalesChannelsForStock"/>
     <preference for="Magento\InventorySalesApi\Model\ReplaceSalesChannelsForStockInterface" type="Magento\InventorySales\Model\ResourceModel\ReplaceSalesChannelsDataForStock"/>
-    <preference for="Magento\InventorySalesApi\Model\GetAssignedStockIdForWebsiteInterface" type="Magento\InventorySales\Model\ResourceModel\GetAssignedStockIdForWebsite"/>
+    <preference for="Magento\InventorySalesApi\Model\GetAssignedStockIdForWebsiteInterface" type="Magento\InventorySales\Model\ResourceModel\GetAssignedStockIdForWebsiteCache"/>
     <preference for="Magento\InventorySalesApi\Model\DeleteSalesChannelToStockLinkInterface" type="Magento\InventorySales\Model\ResourceModel\DeleteSalesChannelToStockLink"/>
     <preference for="Magento\InventorySalesApi\Api\StockResolverInterface" type="Magento\InventorySales\Model\StockResolver"/>
     <preference for="Magento\InventorySalesApi\Api\GetStockBySalesChannelInterface" type="Magento\InventorySales\Model\GetStockBySalesChannel"/>
@@ -53,7 +53,7 @@
     <!-- AreProductsSalable -->
     <preference for="Magento\InventorySalesApi\Api\AreProductsSalableInterface" type="Magento\InventorySales\Model\AreProductsSalable"/>
     <!-- IsProductSalable -->
-    <preference for="Magento\InventorySalesApi\Api\IsProductSalableInterface" type="Magento\InventorySales\Model\IsProductSalableCondition\IsProductSalableConditionChain"/>
+    <preference for="Magento\InventorySalesApi\Api\IsProductSalableInterface" type="Magento\InventorySales\Model\IsProductSalableCondition\IsProductSalableConditionChainCache"/>
     <type name="Magento\InventorySales\Model\IsProductSalableCondition\IsProductSalableConditionChain">
         <arguments>
             <argument name="conditions" xsi:type="array">
