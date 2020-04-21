@@ -44,9 +44,9 @@ class StockIdResolver
      */
     public function resolve(string $type, string $code)
     {
-//        if (isset($this->codesCache[$type]) && array_key_exists($code, $this->codesCache[$type])) {
-//            return $this->codesCache[$type][$code];
-//        }
+        if (isset($this->codesCache[$type]) && array_key_exists($code, $this->codesCache[$type])) {
+            return $this->codesCache[$type][$code];
+        }
 
         $connection = $this->resourceConnection->getConnection();
         $tableName = $this->resourceConnection->getTableName('inventory_stock_sales_channel');
@@ -58,7 +58,7 @@ class StockIdResolver
 
         $stockId = $connection->fetchOne($select);
         $result = false === $stockId ? null : (int)$stockId;
-//        $this->codesCache[$type][$code] = $result;
+        $this->codesCache[$type][$code] = $result;
         return $result;
     }
 }
